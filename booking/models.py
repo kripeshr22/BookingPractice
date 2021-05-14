@@ -1,7 +1,9 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 
+# Room model to determine the type, capacity, beds
 class Room(models.Model):
     ROOM_CATEGORIES = (
         ('YAC', 'AC'),
@@ -17,4 +19,16 @@ class Room(models.Model):
 
     def __str__(self):
         # using f string
-        return f'{self.number}, {self.category} with {self.beds} bed(s) for {self.capacity} people'
+        return f'{self.number}: {self.category} with {self.beds} bed(s) for {self.capacity} people'
+
+
+class Booking(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    check_in = models.DateTimeField()
+    check_out = models.DateTimeField()
+
+    def __str__(self):
+        return f'{self.user} has booked {self.room} from {self.check_in} until {self.check_out}'
+
+
